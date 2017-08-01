@@ -1,0 +1,58 @@
+IF 
+    ISNULL([Context Campaign Medium]) = TRUE
+    AND ISNULL([Context Campaign Source]) = TRUE 
+    AND ISNULL([Context Page Referrer]) = TRUE
+THEN "Direct"
+ELSEIF
+    ISNULL([Context Campaign Medium]) = TRUE AND
+    ISNULL([Context Campaign Source]) = TRUE AND
+    (CONTAINS([Context Page Referrer],"google.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"yahoo.") = TRUE OR
+    CONTAINS([Context Page Referrer],"bing.") = TRUE OR
+    CONTAINS([Context Page Referrer],"ask.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"aol.") = TRUE)
+THEN "Organic Search"
+ELSEIF
+    lower([Context Campaign Medium]) = "email"
+THEN "Email"
+ELSEIF
+    [Context Campaign Medium] = "cpc" OR 
+    [Context Campaign Medium] = "ppc" OR 
+    [Context Campaign Medium] = "paidsearch"
+THEN "Paid Search"
+ELSEIF
+    [Context Campaign Medium] = "display" OR 
+    [Context Campaign Medium] = "cpm" OR 
+    [Context Campaign Medium] = "banner"
+THEN "Display"
+ELSEIF
+    [Context Campaign Medium] = "cpv" OR 
+    [Context Campaign Medium] = "cpa" OR 
+    [Context Campaign Medium] = "cpp" OR 
+    [Context Campaign Medium] = "context-text"
+THEN "Other Advertising"
+ELSEIF
+    [Context Campaign Medium] = "social" OR 
+    (ISNULL([Context Campaign Medium]) = TRUE AND
+    ISNULL([Context Campaign Source]) = TRUE AND
+    (CONTAINS([Context Page Referrer],"facebook.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"pinterest.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"instagram.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"linkedin.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"youtube.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"twitter.") = TRUE OR 
+    [Context Page Referrer] = "t.co" OR 
+    CONTAINS([Context Page Referrer],"stumbleupon.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"reddit.") = TRUE OR 
+    CONTAINS([Context Page Referrer],"flipboard") = TRUE OR
+    CONTAINS([Context Page Referrer],"googleplus.") = TRUE))
+THEN "Social"
+ELSEIF
+    ISNULL([Context Campaign Medium]) = TRUE AND
+    ISNULL([Context Campaign Source]) = TRUE AND
+    (STARTSWITH([Context Page Referrer],"http://www.purewow.com") = TRUE OR
+    STARTSWITH([Context Page Referrer],"https://www.purewow.com") = TRUE)
+THEN "Internal"
+ELSE
+"Referral"
+END
